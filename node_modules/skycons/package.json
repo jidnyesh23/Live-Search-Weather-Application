@@ -1,0 +1,20 @@
+{
+  "name": "skycons",
+  "version": "1.0.0",
+  "description": "Skycons",
+  "main": "skycons.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Sofdesk/skycons.git"
+  },
+  "keywords": [
+    "icons",
+    "weather"
+  ],
+  "author": "darkskyapp",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Sofdesk/skycons/issues"
+  },
+  "homepage": "https://github.com/Sofdesk/skycons"
+}
