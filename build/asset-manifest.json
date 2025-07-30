@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/Live-Search-Weather-Application/static/css/main.0917405e.css",
-    "main.js": "/Live-Search-Weather-Application/static/js/main.4c6cde92.js",
-    "static/media/city.jpg": "/Live-Search-Weather-Application/static/media/city.bec413c4a34b94fe023a.jpg",
-    "static/media/WeatherIcons.gif": "/Live-Search-Weather-Application/static/media/WeatherIcons.c90d089e17d438e81f7e.gif",
-    "static/media/background.jpg": "/Live-Search-Weather-Application/static/media/background.557a9309bec30e5e09e5.jpg",
-    "index.html": "/Live-Search-Weather-Application/index.html",
-    "main.0917405e.css.map": "/Live-Search-Weather-Application/static/css/main.0917405e.css.map",
-    "main.4c6cde92.js.map": "/Live-Search-Weather-Application/static/js/main.4c6cde92.js.map"
+    "main.css": "/static/css/main.3eedc68c.css",
+    "main.js": "/static/js/main.e5ab013c.js",
+    "static/media/city.jpg": "/static/media/city.0a90f07c76cfb02a0358.jpg",
+    "static/media/background.jpg": "/static/media/background.0ec24cbed19a8dd18912.jpg",
+    "static/media/WeatherIcons.gif": "/static/media/WeatherIcons.c90d089e17d438e81f7e.gif",
+    "index.html": "/index.html",
+    "main.3eedc68c.css.map": "/static/css/main.3eedc68c.css.map",
+    "main.e5ab013c.js.map": "/static/js/main.e5ab013c.js.map"
   },
   "entrypoints": [
-    "static/css/main.0917405e.css",
-    "static/js/main.4c6cde92.js"
+    "static/css/main.3eedc68c.css",
+    "static/js/main.e5ab013c.js"
   ]
 }
