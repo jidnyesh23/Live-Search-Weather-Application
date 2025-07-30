@@ -21,7 +21,5 @@ module.exports = function readWasm() {
 };
 
 module.exports.initialize = _ => {
-  console.debug(
-    "SourceMapConsumer.initialize is a no-op when running in node.js"
-  );
+  console.debug("SourceMapConsumer.initialize is a no-op when running in node.js");
 };
