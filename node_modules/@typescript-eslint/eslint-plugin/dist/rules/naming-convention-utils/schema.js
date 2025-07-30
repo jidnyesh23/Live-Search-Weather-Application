@@ -1,11 +1,7 @@
 "use strict";
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
@@ -24,8 +20,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SCHEMA = void 0;
-const util = __importStar(require("../../util"));
 const enums_1 = require("./enums");
+const util = __importStar(require("../../util"));
 const UNDERSCORE_SCHEMA = {
     type: 'string',
     enum: util.getEnumNames(enums_1.UnderscoreOptions),
@@ -167,44 +163,33 @@ const SCHEMA = {
         oneOf: [
             selectorsSchema(),
             ...selectorSchema('default', false, util.getEnumNames(enums_1.Modifiers)),
-            ...selectorSchema('variableLike', false, ['unused', 'async']),
+            ...selectorSchema('variableLike', false, ['unused']),
             ...selectorSchema('variable', true, [
                 'const',
                 'destructured',
                 'exported',
                 'global',
                 'unused',
-                'async',
             ]),
-            ...selectorSchema('function', false, [
-                'exported',
-                'global',
-                'unused',
-                'async',
-            ]),
+            ...selectorSchema('function', false, ['exported', 'global', 'unused']),
             ...selectorSchema('parameter', true, ['destructured', 'unused']),
             ...selectorSchema('memberLike', false, [
                 'abstract',
                 'private',
-                '#private',
                 'protected',
                 'public',
                 'readonly',
                 'requiresQuotes',
                 'static',
-                'override',
-                'async',
             ]),
             ...selectorSchema('classProperty', true, [
                 'abstract',
                 'private',
-                '#private',
                 'protected',
                 'public',
                 'readonly',
                 'requiresQuotes',
                 'static',
-                'override',
             ]),
             ...selectorSchema('objectLiteralProperty', true, [
                 'public',
@@ -224,42 +209,32 @@ const SCHEMA = {
             ...selectorSchema('property', true, [
                 'abstract',
                 'private',
-                '#private',
                 'protected',
                 'public',
                 'readonly',
                 'requiresQuotes',
                 'static',
-                'override',
-                'async',
             ]),
             ...selectorSchema('classMethod', false, [
                 'abstract',
                 'private',
-                '#private',
                 'protected',
                 'public',
                 'requiresQuotes',
                 'static',
-                'override',
-                'async',
             ]),
             ...selectorSchema('objectLiteralMethod', false, [
                 'public',
                 'requiresQuotes',
-                'async',
             ]),
             ...selectorSchema('typeMethod', false, ['public', 'requiresQuotes']),
             ...selectorSchema('method', false, [
                 'abstract',
                 'private',
-                '#private',
                 'protected',
                 'public',
                 'requiresQuotes',
                 'static',
-                'override',
-                'async',
             ]),
             ...selectorSchema('accessor', true, [
                 'abstract',
@@ -268,7 +243,6 @@ const SCHEMA = {
                 'public',
                 'requiresQuotes',
                 'static',
-                'override',
             ]),
             ...selectorSchema('enumMember', false, ['requiresQuotes']),
             ...selectorSchema('typeLike', false, ['abstract', 'exported', 'unused']),

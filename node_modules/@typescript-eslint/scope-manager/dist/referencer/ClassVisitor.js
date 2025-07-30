@@ -68,8 +68,8 @@ class ClassVisitor extends Visitor_1.Visitor {
         this.visit(node.body);
         __classPrivateFieldGet(this, _ClassVisitor_referencer, "f").close(node);
     }
-    visitPropertyDefinition(node) {
-        this.visitPropertyBase(node);
+    visitClassProperty(node) {
+        this.visitProperty(node);
         /**
          * class A {
          *   @meta     // <--- check this
@@ -134,7 +134,7 @@ class ClassVisitor extends Visitor_1.Visitor {
              *   set ['a'](v: Type) {}
              * }
              */
-            if (keyName != null &&
+            if (keyName !== null &&
                 ((_a = __classPrivateFieldGet(this, _ClassVisitor_classNode, "f").body.body.find((node) => node !== methodNode &&
                     node.type === types_1.AST_NODE_TYPES.MethodDefinition &&
                     // Node must both be static or not
@@ -180,22 +180,12 @@ class ClassVisitor extends Visitor_1.Visitor {
         }
         __classPrivateFieldGet(this, _ClassVisitor_referencer, "f").close(node);
     }
-    visitPropertyBase(node) {
+    visitProperty(node) {
         var _a;
         if (node.computed) {
             __classPrivateFieldGet(this, _ClassVisitor_referencer, "f").visit(node.key);
         }
-        if (node.value) {
-            if (node.type === types_1.AST_NODE_TYPES.PropertyDefinition ||
-                node.type === types_1.AST_NODE_TYPES.AccessorProperty) {
-                __classPrivateFieldGet(this, _ClassVisitor_referencer, "f").scopeManager.nestClassFieldInitializerScope(node.value);
-            }
-            __classPrivateFieldGet(this, _ClassVisitor_referencer, "f").visit(node.value);
-            if (node.type === types_1.AST_NODE_TYPES.PropertyDefinition ||
-                node.type === types_1.AST_NODE_TYPES.AccessorProperty) {
-                __classPrivateFieldGet(this, _ClassVisitor_referencer, "f").close(node.value);
-            }
-        }
+        __classPrivateFieldGet(this, _ClassVisitor_referencer, "f").visit(node.value);
         if ('decorators' in node) {
             (_a = node.decorators) === null || _a === void 0 ? void 0 : _a.forEach(d => __classPrivateFieldGet(this, _ClassVisitor_referencer, "f").visit(d));
         }
@@ -230,21 +220,19 @@ class ClassVisitor extends Visitor_1.Visitor {
             !__classPrivateFieldGet(this, _ClassVisitor_classNode, "f").declare &&
             node.typeAnnotation.type === types_1.AST_NODE_TYPES.TSTypeReference &&
             __classPrivateFieldGet(this, _ClassVisitor_emitDecoratorMetadata, "f")) {
-            let entityName;
+            let identifier;
             if (node.typeAnnotation.typeName.type === types_1.AST_NODE_TYPES.TSQualifiedName) {
                 let iter = node.typeAnnotation.typeName;
                 while (iter.left.type === types_1.AST_NODE_TYPES.TSQualifiedName) {
                     iter = iter.left;
                 }
-                entityName = iter.left;
+                identifier = iter.left;
             }
             else {
-                entityName = node.typeAnnotation.typeName;
+                identifier = node.typeAnnotation.typeName;
             }
             if (withDecorators) {
-                if (entityName.type === types_1.AST_NODE_TYPES.Identifier) {
-                    __classPrivateFieldGet(this, _ClassVisitor_referencer, "f").currentScope().referenceDualValueType(entityName);
-                }
+                __classPrivateFieldGet(this, _ClassVisitor_referencer, "f").currentScope().referenceDualValueType(identifier);
                 if (node.typeAnnotation.typeParameters) {
                     this.visitType(node.typeAnnotation.typeParameters);
                 }
@@ -257,39 +245,25 @@ class ClassVisitor extends Visitor_1.Visitor {
     /////////////////////
     // Visit selectors //
     /////////////////////
-    AccessorProperty(node) {
-        this.visitPropertyDefinition(node);
-    }
     ClassBody(node) {
         // this is here on purpose so that this visitor explicitly declares visitors
         // for all nodes it cares about (see the instance visit method above)
         this.visitChildren(node);
     }
-    PropertyDefinition(node) {
-        this.visitPropertyDefinition(node);
+    ClassProperty(node) {
+        this.visitClassProperty(node);
     }
     MethodDefinition(node) {
         this.visitMethod(node);
     }
-    TSAbstractAccessorProperty(node) {
-        this.visitPropertyDefinition(node);
-    }
-    TSAbstractPropertyDefinition(node) {
-        this.visitPropertyDefinition(node);
+    TSAbstractClassProperty(node) {
+        this.visitClassProperty(node);
     }
     TSAbstractMethodDefinition(node) {
-        this.visitPropertyBase(node);
+        this.visitProperty(node);
     }
     Identifier(node) {
         __classPrivateFieldGet(this, _ClassVisitor_referencer, "f").visit(node);
-    }
-    PrivateIdentifier() {
-        // intentionally skip
-    }
-    StaticBlock(node) {
-        __classPrivateFieldGet(this, _ClassVisitor_referencer, "f").scopeManager.nestClassStaticBlockScope(node);
-        node.body.forEach(b => this.visit(b));
-        __classPrivateFieldGet(this, _ClassVisitor_referencer, "f").close(node);
     }
 }
 exports.ClassVisitor = ClassVisitor;

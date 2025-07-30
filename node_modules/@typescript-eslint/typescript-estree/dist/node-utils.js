@@ -1,11 +1,7 @@
 "use strict";
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
@@ -23,13 +19,10 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.isThisInTypeQuery = exports.isThisIdentifier = exports.identifierIsThisKeyword = exports.firstDefined = exports.nodeHasTokens = exports.createError = exports.TSError = exports.convertTokens = exports.convertToken = exports.getTokenType = exports.isChildUnwrappableOptionalChain = exports.isChainExpression = exports.isOptional = exports.isComputedProperty = exports.unescapeStringLiteralText = exports.hasJSXAncestor = exports.findFirstMatchingAncestor = exports.findNextToken = exports.getTSNodeAccessibility = exports.getDeclarationKind = exports.isJSXToken = exports.isToken = exports.getRange = exports.canContainDirective = exports.getLocFor = exports.getLineAndCharacterFor = exports.getBinaryExpressionType = exports.isJSDocComment = exports.isComment = exports.isComma = exports.getLastModifier = exports.hasModifier = exports.isESTreeClassMember = exports.getTextForTokenKind = exports.isLogicalOperator = exports.isAssignmentOperator = void 0;
+exports.firstDefined = exports.nodeHasTokens = exports.createError = exports.TSError = exports.convertTokens = exports.convertToken = exports.getTokenType = exports.isChildUnwrappableOptionalChain = exports.isChainExpression = exports.isOptional = exports.isComputedProperty = exports.unescapeStringLiteralText = exports.hasJSXAncestor = exports.findFirstMatchingAncestor = exports.findNextToken = exports.getTSNodeAccessibility = exports.getDeclarationKind = exports.isJSXToken = exports.isToken = exports.getRange = exports.canContainDirective = exports.getLocFor = exports.getLineAndCharacterFor = exports.getBinaryExpressionType = exports.isJSDocComment = exports.isComment = exports.isComma = exports.getLastModifier = exports.hasModifier = exports.isESTreeClassMember = exports.getTextForTokenKind = exports.isLogicalOperator = exports.isAssignmentOperator = void 0;
 const ts = __importStar(require("typescript"));
-const getModifiers_1 = require("./getModifiers");
-const xhtml_entities_1 = require("./jsx/xhtml-entities");
 const ts_estree_1 = require("./ts-estree");
-const version_check_1 = require("./version-check");
-const isAtLeast50 = version_check_1.typescriptVersionIsAtLeast['5.0'];
+const xhtml_entities_1 = require("./jsx/xhtml-entities");
 const SyntaxKind = ts.SyntaxKind;
 const LOGICAL_OPERATORS = [
     SyntaxKind.BarBarToken,
@@ -80,8 +73,9 @@ exports.isESTreeClassMember = isESTreeClassMember;
  * @returns has the modifier specified
  */
 function hasModifier(modifierKind, node) {
-    const modifiers = (0, getModifiers_1.getModifiers)(node);
-    return (modifiers === null || modifiers === void 0 ? void 0 : modifiers.some(modifier => modifier.kind === modifierKind)) === true;
+    return (!!node.modifiers &&
+        !!node.modifiers.length &&
+        node.modifiers.some(modifier => modifier.kind === modifierKind));
 }
 exports.hasModifier = hasModifier;
 /**
@@ -90,12 +84,10 @@ exports.hasModifier = hasModifier;
  * @returns returns last modifier if present or null
  */
 function getLastModifier(node) {
-    var _a;
-    const modifiers = (0, getModifiers_1.getModifiers)(node);
-    if (modifiers == null) {
-        return null;
-    }
-    return (_a = modifiers[modifiers.length - 1]) !== null && _a !== void 0 ? _a : null;
+    return ((!!node.modifiers &&
+        !!node.modifiers.length &&
+        node.modifiers[node.modifiers.length - 1]) ||
+        null);
 }
 exports.getLastModifier = getLastModifier;
 /**
@@ -242,11 +234,12 @@ exports.getDeclarationKind = getDeclarationKind;
  * @returns accessibility "public", "protected", "private", or null
  */
 function getTSNodeAccessibility(node) {
-    const modifiers = (0, getModifiers_1.getModifiers)(node);
-    if (modifiers == null) {
+    const modifiers = node.modifiers;
+    if (!modifiers) {
         return null;
     }
-    for (const modifier of modifiers) {
+    for (let i = 0; i < modifiers.length; i++) {
+        const modifier = modifiers[i];
         switch (modifier.kind) {
             case SyntaxKind.PublicKeyword:
                 return 'public';
@@ -376,20 +369,12 @@ exports.isChildUnwrappableOptionalChain = isChildUnwrappableOptionalChain;
  * @returns the token type
  */
 function getTokenType(token) {
-    let keywordKind;
-    if (isAtLeast50 && token.kind === SyntaxKind.Identifier) {
-        keywordKind = ts.identifierToKeywordKind(token);
-    }
-    else if ('originalKeywordKind' in token) {
-        // eslint-disable-next-line deprecation/deprecation -- intentional fallback for older TS versions
-        keywordKind = token.originalKeywordKind;
-    }
-    if (keywordKind) {
-        if (keywordKind === SyntaxKind.NullKeyword) {
+    if ('originalKeywordKind' in token && token.originalKeywordKind) {
+        if (token.originalKeywordKind === SyntaxKind.NullKeyword) {
             return ts_estree_1.AST_TOKEN_TYPES.Null;
         }
-        else if (keywordKind >= SyntaxKind.FirstFutureReservedWord &&
-            keywordKind <= SyntaxKind.LastKeyword) {
+        else if (token.originalKeywordKind >= SyntaxKind.FirstFutureReservedWord &&
+            token.originalKeywordKind <= SyntaxKind.LastKeyword) {
             return ts_estree_1.AST_TOKEN_TYPES.Identifier;
         }
         return ts_estree_1.AST_TOKEN_TYPES.Keyword;
@@ -571,27 +556,4 @@ function firstDefined(array, callback) {
     return undefined;
 }
 exports.firstDefined = firstDefined;
-function identifierIsThisKeyword(id) {
-    return (
-    // eslint-disable-next-line deprecation/deprecation -- intentional for older TS versions
-    (isAtLeast50 ? ts.identifierToKeywordKind(id) : id.originalKeywordKind) ===
-        SyntaxKind.ThisKeyword);
-}
-exports.identifierIsThisKeyword = identifierIsThisKeyword;
-function isThisIdentifier(node) {
-    return (!!node &&
-        node.kind === SyntaxKind.Identifier &&
-        identifierIsThisKeyword(node));
-}
-exports.isThisIdentifier = isThisIdentifier;
-function isThisInTypeQuery(node) {
-    if (!isThisIdentifier(node)) {
-        return false;
-    }
-    while (ts.isQualifiedName(node.parent) && node.parent.left === node) {
-        node = node.parent;
-    }
-    return node.parent.kind === SyntaxKind.TypeQuery;
-}
-exports.isThisInTypeQuery = isThisInTypeQuery;
 //# sourceMappingURL=node-utils.js.map
